@@ -9,11 +9,13 @@ I built this project for my **Web Engineering** course in the BS Software Engine
 
 ## Screenshots
 
-![Movie library](screenshots/movies.png)
+| Login | Home |
+|---|---|
+| ![Login](screenshots/login.png) | ![Home](screenshots/home.png) |
 
-| Login | Home | Stats table |
-|---|---|---|
-| ![Login](screenshots/login.png) | ![Home](screenshots/home.png) | ![Stats table](screenshots/stats.png) |
+| Movie library | Stats table |
+|---|---|
+| ![Movie library](screenshots/movies.png) | ![Stats table](screenshots/stats.png) |
 ## Features
 
 - **Login and register forms** with input validation (email format, password length, matching passwords)
