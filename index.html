@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- ═══════════════════════════════════════════
+       META TAGS (teacher requirement)
+  ═══════════════════════════════════════════ -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="MovieFlix – Browse, search, filter and watchlist your favourite movies." />
+  <meta name="keywords" content="movies, watchlist, cinema, film, search, genre" />
+  <meta name="author" content="MovieFlix Project" />
+  <meta name="theme-color" content="#070617" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="MovieFlix" />
+  <meta property="og:description" content="Cinema at your fingertips." />
+  <meta property="og:type" content="website" />
+
+  <title>MovieFlix</title>
+
+  <!-- EXTERNAL CSS (teacher: absolute & external referencing) -->
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- External Google Fonts (absolute referencing) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+
+  <!-- ═══════════════════════════════════════════
+       LOGIN OVERLAY  (form + input validation)
+  ═══════════════════════════════════════════ -->
+  <div id="loginOverlay" class="login-overlay">
+    <div class="login-card">
+      <div class="login-logo">MOVIEFLIX</div>
+      <p class="login-sub">Sign in to explore movies</p>
+      <p class="demo-hint">Demo: use any email and a password of 6+ characters.</p>
+
+      <form id="loginForm" novalidate>
+        <div class="form-group">
+          <label for="loginEmail">Email</label>
+          <input type="email" id="loginEmail" placeholder="you@example.com" autocomplete="email" />
+          <span class="err" id="emailErr"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="loginPassword">Password</label>
+          <div class="pass-wrap">
+            <input type="password" id="loginPassword" placeholder="Min 6 characters" autocomplete="current-password" />
+            <button type="button" class="eye-btn" onclick="togglePass()">👁</button>
+          </div>
+          <span class="err" id="passErr"></span>
+        </div>
+
+        <div class="form-group checkbox-row">
+          <input type="checkbox" id="rememberMe" />
+          <label for="rememberMe">Remember me</label>
+        </div>
+
+        <button type="submit" class="btn red-btn full-btn">Login</button>
+        <p class="signup-hint">Don't have an account? <a href="#" onclick="switchToRegister()">Register</a></p>
+      </form>
+    </div>
+  </div>
+
+  <!-- REGISTER OVERLAY -->
+  <div id="registerOverlay" class="login-overlay" style="display:none;">
+    <div class="login-card">
+      <div class="login-logo">MOVIEFLIX</div>
+      <p class="login-sub">Create your account</p>
+
+      <form id="registerForm" novalidate>
+        <div class="form-group">
+          <label for="regName">Full Name</label>
+          <input type="text" id="regName" placeholder="Your full name" />
+          <span class="err" id="regNameErr"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="regEmail">Email</label>
+          <input type="email" id="regEmail" placeholder="you@example.com" />
+          <span class="err" id="regEmailErr"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="regPassword">Password</label>
+          <input type="password" id="regPassword" placeholder="Min 6 characters" />
+          <span class="err" id="regPassErr"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="regConfirm">Confirm Password</label>
+          <input type="password" id="regConfirm" placeholder="Repeat password" />
+          <span class="err" id="regConfErr"></span>
+        </div>
+
+        <button type="submit" class="btn red-btn full-btn">Register</button>
+        <p class="signup-hint">Already have an account? <a href="#" onclick="switchToLogin()">Login</a></p>
+      </form>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       MAIN APP (hidden until login)
+  ═══════════════════════════════════════════ -->
+  <div id="mainApp" style="display:none;">
+
+    <!-- NAVBAR (semantic: <nav>) -->
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
+      <div class="logo">MOVIEFLIX</div>
+      <ul class="nav-links">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#movies">Movies</a></li>
+        <li><a href="#gallery">Gallery</a></li>
+        <li><a href="#watchlist">Watchlist</a></li>
+        <li><a href="#stats-table">Stats</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <!-- Dark/Light toggle (teacher: toggle button) -->
+      <div class="nav-right">
+        <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle theme">🌙</button>
+        <span class="user-badge" id="userBadge"></span>
+        <button class="btn dark-btn small-logout" onclick="logout()">Logout</button>
+      </div>
+    </nav>
+
+    <!-- ── HERO ── (semantic: <header>) -->
+    <header class="hero" id="home" role="banner">
+      <div class="hero-content">
+        <span class="badge">🎬 Cinema at Your Fingertips</span>
+        <h1>Find Your Next <span>Favorite Movie</span></h1>
+        <p>
+          MovieFlix is a colorful movie explorer where you can browse movies,
+          search by name, filter by genre, view details, and build your own watchlist.
+        </p>
+        <button class="btn red-btn" onclick="goToMovies()">Explore Movies</button>
+        <button class="btn dark-btn" onclick="goToWatchlist()">My Watchlist</button>
+      </div>
+      <!-- Animated floating posters (background image animation) -->
+      <div class="hero-floaters" aria-hidden="true">
+        <div class="floater f1"></div>
+        <div class="floater f2"></div>
+        <div class="floater f3"></div>
+      </div>
+    </header>
+
+    <!-- ── WEATHER API WIDGET (teacher: Web API) ── -->
+    <section class="weather-bar" id="weatherBar" aria-label="Weather info">
+      <div class="weather-inner">
+        <span id="weatherIcon">🌍</span>
+        <span id="weatherText">Fetching Gujrat weather…</span>
+        <span id="weatherExtra"></span>
+      </div>
+    </section>
+
+    <!-- ── MOVIES SECTION (semantic: <section>, <article>) ── -->
+    <section id="movies" aria-labelledby="moviesTitle">
+      <h2 class="section-title" id="moviesTitle">Movie Library</h2>
+      <p class="section-text">Search, sort and filter movies. Hover a card for a quick preview.</p>
+
+      <div class="controls">
+        <!-- Search (teacher: searching) -->
+        <input type="text" class="search-input" id="searchInput"
+               placeholder="🔍 Search movie name…"
+               oninput="showMovies()"
+               aria-label="Search movies" />
+
+        <!-- Sort (teacher: sorting) -->
+        <select class="sort-select" id="sortSelect" onchange="showMovies()" aria-label="Sort movies">
+          <option value="default">Sort: Default</option>
+          <option value="rating-desc">Rating ↓</option>
+          <option value="rating-asc">Rating ↑</option>
+          <option value="year-desc">Newest first</option>
+          <option value="year-asc">Oldest first</option>
+          <option value="title-asc">Title A–Z</option>
+        </select>
+
+        <!-- Genre filter buttons (teacher: filter) -->
+        <div class="filter-buttons" role="group" aria-label="Genre filter">
+          <button class="filter-btn active" onclick="setGenre('All', this)">All</button>
+          <button class="filter-btn" onclick="setGenre('Action', this)">Action</button>
+          <button class="filter-btn" onclick="setGenre('Comedy', this)">Comedy</button>
+          <button class="filter-btn" onclick="setGenre('Sci-Fi', this)">Sci-Fi</button>
+          <button class="filter-btn" onclick="setGenre('Romance', this)">Romance</button>
+          <button class="filter-btn" onclick="setGenre('Horror', this)">Horror</button>
+        </div>
+      </div>
+
+      <!-- Results count (teacher: JS display possibilities) -->
+      <p class="results-count" id="resultsCount"></p>
+
+      <div class="movie-grid" id="movieGrid" role="list"></div>
+    </section>
+
+    <!-- ── INTERACTIVE IMAGE GALLERY (teacher: image gallery) ── -->
+    <section id="gallery" aria-labelledby="galleryTitle">
+      <h2 class="section-title" id="galleryTitle">📸 Movie Gallery</h2>
+      <p class="section-text">Click any image to open a full-screen lightbox.</p>
+
+      <div class="gallery-grid" id="galleryGrid"></div>
+
+      <!-- Lightbox -->
+      <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Image lightbox">
+        <button class="lb-close" onclick="closeLightbox()" aria-label="Close">✕</button>
+        <button class="lb-prev"  onclick="lbPrev()"       aria-label="Previous">‹</button>
+        <button class="lb-next"  onclick="lbNext()"       aria-label="Next">›</button>
+        <div class="lb-img-wrap">
+          <img id="lbImage" src="" alt="Movie still" />
+          <p  id="lbCaption"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── STATS TABLE (teacher: tables) ── -->
+    <section id="stats-table" aria-labelledby="tableTitle">
+      <h2 class="section-title" id="tableTitle">📊 Movie Stats Table</h2>
+      <p class="section-text">All movies, their genre, year and rating at a glance.</p>
+
+      <div class="table-wrap">
+        <table class="stats-table" role="table" aria-label="Movie stats">
+          <caption>Complete Movie List – MovieFlix Library</caption>
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Title</th>
+              <th scope="col">Genre</th>
+              <th scope="col">Year</th>
+              <th scope="col">Rating</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody id="statsTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ── WATCHLIST ── -->
+    <section id="watchlist" aria-labelledby="watchlistTitle">
+      <h2 class="section-title" id="watchlistTitle">My Watchlist</h2>
+      <p class="section-text">Movies you have saved appear here.</p>
+
+      <div class="stats">
+        <div class="stat-card">
+          <h3 id="totalMovies">0</h3>
+          <p>Total Movies</p>
+        </div>
+        <div class="stat-card">
+          <h3 id="totalGenres">5</h3>
+          <p>Genres</p>
+        </div>
+        <div class="stat-card">
+          <h3 id="totalWatchlist">0</h3>
+          <p>Watchlist</p>
+        </div>
+      </div>
+
+      <div class="watchlist-box">
+        <div class="watchlist" id="watchlistItems" role="list"></div>
+      </div>
+    </section>
+
+    <!-- ── CONTACT FORM (teacher: forms + input validation) ── -->
+    <section id="contact" aria-labelledby="contactTitle">
+      <h2 class="section-title" id="contactTitle">📬 Contact Us</h2>
+      <p class="section-text">Send us your movie suggestions or feedback.</p>
+
+      <div class="contact-wrap">
+        <form id="contactForm" class="contact-form" novalidate>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="cName">Full Name *</label>
+              <input type="text" id="cName" placeholder="Your name" />
+              <span class="err" id="cNameErr"></span>
+            </div>
+            <div class="form-group">
+              <label for="cEmail">Email *</label>
+              <input type="email" id="cEmail" placeholder="you@example.com" />
+              <span class="err" id="cEmailErr"></span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="cSubject">Subject *</label>
+            <select id="cSubject">
+              <option value="">-- Choose a subject --</option>
+              <option value="suggestion">Movie Suggestion</option>
+              <option value="feedback">General Feedback</option>
+              <option value="bug">Report a Bug</option>
+              <option value="other">Other</option>
+            </select>
+            <span class="err" id="cSubjectErr"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="cMessage">Message *</label>
+            <textarea id="cMessage" rows="5" placeholder="Write your message here…"></textarea>
+            <span class="err" id="cMsgErr"></span>
+          </div>
+
+          <div class="form-group checkbox-row">
+            <input type="checkbox" id="cAgree" />
+            <label for="cAgree">I agree to the terms and conditions</label>
+            <span class="err" id="cAgreeErr"></span>
+          </div>
+
+          <button type="submit" class="btn red-btn">Send Message</button>
+        </form>
+
+        <!-- Confirmation message (JS display) -->
+        <div id="contactSuccess" class="contact-success" style="display:none;">
+          <span>✅</span>
+          <p>Thank you! Your message has been sent.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── FOOTER (semantic: <footer>) ── -->
+    <footer role="contentinfo">
+      <div class="footer-inner">
+        <p class="footer-logo">MOVIEFLIX</p>
+        <p>Made with HTML, CSS &amp; JavaScript &nbsp;|&nbsp; Web API integrated</p>
+        <p class="footer-links">
+          <a href="#home">Home</a> &bull;
+          <a href="#movies">Movies</a> &bull;
+          <a href="#gallery">Gallery</a> &bull;
+          <a href="#watchlist">Watchlist</a> &bull;
+          <a href="#contact">Contact</a>
+        </p>
+      </div>
+    </footer>
+
+  </div><!-- /#mainApp -->
+
+  <!-- MODAL (details popup) -->
+  <div class="modal" id="movieModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-box">
+      <div class="modal-img" id="modalImage"></div>
+      <div class="modal-content">
+        <button class="close" onclick="closeModal()" aria-label="Close modal">×</button>
+        <h2 id="modalTitle"></h2>
+        <p id="modalMeta"></p>
+        <p id="modalDescription"></p>
+        <button class="btn red-btn" id="modalWatchlistBtn" onclick="addFromModal()">+ Add to Watchlist</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION (JS interactive display) -->
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <!-- SCROLL TO TOP button (toggle visibility) -->
+  <button class="scroll-top" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Scroll to top">↑</button>
+
+  <!-- EXTERNAL JS (teacher: external referencing) -->
+  <script src="script.js"></script>
+</body>
+</html>
